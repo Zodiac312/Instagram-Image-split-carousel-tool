@@ -1,0 +1,40 @@
+import cv2
+import os
+
+def split_image(input_image_path, output_folder_path):
+    try:
+        # Read the image using OpenCV
+        img = cv2.imread(input_image_path)
+
+        # Get the dimensions of the image
+        height, width = img.shape[:2]
+
+        # Calculate the width of each part
+        part_width = width // 9
+
+        # Create output folder if it doesn't exist
+        if not os.path.exists(output_folder_path):
+            os.makedirs(output_folder_path)
+
+        # Split the image into 9 parts in a single row
+        for i in range(9):
+            left = i * part_width
+            upper = 0
+            right = left + part_width
+            lower = height
+
+            # Crop the image
+            part = img[upper:lower, left:right]
+
+            # Save each part to the output folder
+            cv2.imwrite(f"{output_folder_path}/part_{i}.png", part)
+
+        print("Image has been split into 9 parts in a row and saved successfully.")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+# Get user input for input image path and output folder path
+input_image_path = input("Enter the path to the input image: ")
+output_folder_path = input("Enter the path to the output folder: ")
+
+split_image(input_image_path, output_folder_path)
